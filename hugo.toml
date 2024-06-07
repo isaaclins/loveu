@@ -1,4 +1,4 @@
-baseURL = "https://loveu.ch"
+baseURL = "http://loveu.ch"
 languageCode = 'en-us'
 theme = "coming-soon"
 
