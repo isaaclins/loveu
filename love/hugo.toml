@@ -1,0 +1,10 @@
+baseURL = "https://isaaclins.com"
+languageCode = 'en-us'
+theme = "coming-soon"
+
+[params]
+    title = "Für Kaya <3"
+    favicon = ""
+    message = "COMING SOON" 
+    release = "june 9, 2024" 
+    background = "" 

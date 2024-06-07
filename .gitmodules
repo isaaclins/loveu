@@ -1,0 +1,3 @@
+[submodule "love/themes/coming-soon"]
+	path = love/themes/coming-soon
+	url = https://github.com/mansoorbarri/coming-soon.git
