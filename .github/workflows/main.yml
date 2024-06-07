@@ -1,4 +1,3 @@
-# Sample workflow for building and deploying a Hugo site to GitHub Pages
 name: im Trying once again...
 
 on:
@@ -45,6 +44,10 @@ jobs:
         with:
           submodules: recursive
           fetch-depth: 0
+      - name: Initialize and update submodules
+        run: |
+          git submodule update --init --recursive
+          git submodule update --remote --recursive
       - name: Delete ./public directory
         run: rm -rf ./public 
       - name: Delete ./resources directory
