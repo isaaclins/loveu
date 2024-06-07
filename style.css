@@ -1,0 +1,45 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    height: 100vh;
+    background-color: #f9cbcb;
+    position: relative;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none; 
+}
+
+.heart {
+    position: absolute;
+    width: 50px; 
+    height: 50px; 
+    animation: floatUp 5s linear infinite, sway 2s ease-in-out infinite alternate;
+    will-change: transform;
+}
+
+@keyframes floatUp {
+    0% {
+        bottom: 0;
+        opacity: 1;
+    }
+    100% {
+        bottom: 100vh;
+        opacity: 1;
+    }
+}
+
+@keyframes sway {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(1px);
+    }
+}
