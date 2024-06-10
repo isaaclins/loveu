@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const background = document.querySelector('.background');
-    const numberOfHearts = 20;
-    const animationDuration = 5; // seconds
+    const numberOfHearts = 80;
+    const animationDuration = 10; // seconds
 
     for (let i = 0; i < numberOfHearts; i++) {
         createHeart();
