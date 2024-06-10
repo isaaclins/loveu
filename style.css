@@ -1,9 +1,21 @@
-body {
-    margin: 0;
-    overflow: hidden;
-    height: 100vh;
-    background-color: #f9cbcb;
-    position: relative;
+/*
+font
+*/
+:root {
+  font-family: "Urbanist", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 5;
+  font-style: normal;
+  background-color: #f9cbcb;
+  overflow: hidden;
+
+}
+.body-inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center; /* Center the text inside the body-inner */
 }
 
 .background {
@@ -12,8 +24,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
-    pointer-events: none; 
+    z-index: -91;
 }
 
 .heart {
@@ -22,16 +33,20 @@ body {
     height: 50px; 
     animation: floatUp 10s linear infinite;
     will-change: transform;
+    z-index: -100;
 }
 
 @keyframes floatUp {
     0% {
         bottom: 0;
+        opacity: 0.5;
+    }
+    50% {
         opacity: 1;
     }
     100% {
         bottom: 100vh;
-        opacity: 1;
+        opacity: 0.5;
     }
 }
 
@@ -41,8 +56,7 @@ body {
     height: 50vh;
     position: fixed;
     left: 0;
-    background-color: #fff; /* Change as needed */
-    z-index: 999; /* Ensure it's above other content */
+    z-index: -90; /* Ensure it's above other content */
 
 }
 
