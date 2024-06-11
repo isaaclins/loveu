@@ -11,11 +11,15 @@ font
 
 }
 .body-inner {
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(10px);
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     text-align: center; /* Center the text inside the body-inner */
+    height: 100vh; /* Full height of the viewport */
+    overflow: auto; /* Add this line */
 }
 
 .background {
@@ -70,4 +74,14 @@ font
     bottom: 0;
     background: linear-gradient(to bottom, rgba(255, 0, 0, 0), #f9cbcb); /* White to Blue */
 
+}
+h1 {
+    color: white;
+    text-shadow: 3px 3px 4px rgba(0, 0, 0, 0.5);
+    font-weight: bold;
+    font-size: 2em;
+    border: 2px solid white;
+    border-radius: 50px;
+    padding: 10px 20px;
+    background-color: rgba(255, 255, 255, 0.356);
 }
