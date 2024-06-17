@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const background = document.querySelector('.background');
-    const numberOfHearts = 100;
+    const numberOfHearts = 30;
     const animationDuration = 10; 
 
     for (let i = 0; i < numberOfHearts; i++) {
