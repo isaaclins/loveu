@@ -105,3 +105,9 @@ h1 {
 .coquette-text::-webkit-scrollbar-thumb:hover {
     background: #55555500; 
 }
+@media screen and (max-width: 600px) {
+    .body-inner {
+      justify-content: center;
+      align-items: center;
+    }
+  }
