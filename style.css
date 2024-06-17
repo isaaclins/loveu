@@ -6,6 +6,7 @@
   background-color: #f9cbcb;
   overflow: hidden;
 }
+
 .body-inner {
     backdrop-filter: blur(1px);
     -webkit-backdrop-filter: blur(1px);
