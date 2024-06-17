@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i < numberOfHearts; i++) {
         createHeart();
     }
-
     function createHeart() {
     const heart = document.createElement('img');
     heart.src = 'resources/heart-emoji.png';
