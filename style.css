@@ -8,7 +8,6 @@ font
   font-style: normal;
   background-color: #f9cbcb;
   overflow: hidden;
-
 }
 .body-inner {
     backdrop-filter: blur(1px);
@@ -17,11 +16,9 @@ font
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    text-align: center; /* Center the text inside the body-inner */
-    height: 100vh; /* Full height of the viewport */
-    overflow: auto; /* Add this line */
+    text-align: center; 
+    overflow: hidden;
 }
-
 .background {
     position: absolute;
     top: 0;
@@ -90,4 +87,8 @@ h1 {
     border: 2px solid white;
     border-radius: 50px;
     padding: 5px 10px;
-    background-color: rgba(255, 255, 255, 0.5);}
+    background-color: rgba(255, 255, 255, 0.5);
+    overflow: auto;
+    height: 40em; /* Adjust this value as needed */
+
+}
