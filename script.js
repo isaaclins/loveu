@@ -1,3 +1,6 @@
+const targetDate = new Date('2024-08-05');
+const currentDate = new Date();
+const daysPassed = Math.floor((currentDate - targetDate) / (1000 * 60 * 60 * 24));
 document.addEventListener('DOMContentLoaded', () => {
     const background = document.querySelector('.background');
     const numberOfHearts = 30;
