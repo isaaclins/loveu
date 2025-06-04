@@ -1,0 +1,20 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "header",
+          "key": "User-Agent",
+          "value": ".*curl.*"
+        }
+      ],
+      "destination": "/curl.txt"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/website.html"
+    }
+  ]
+} 
