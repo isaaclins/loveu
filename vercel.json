@@ -10,7 +10,7 @@
           "value": ".*curl.*"
         }
       ],
-      "destination": "/curl.txt"
+      "destination": "/curl.sh"
     },
     {
       "source": "/(.*)",
