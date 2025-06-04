@@ -10,7 +10,7 @@
           "value": ".*curl.*"
         }
       ],
-      "destination": "/curl.sh"
+      "destination": "/api/curl_handler"
     },
     {
       "source": "/(.*)",
