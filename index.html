@@ -34,6 +34,8 @@
         height: 100%;
         pointer-events: none;
         z-index: 2000;
+        opacity: 0;
+        animation: fadeInAfterDelay 1s ease-in 8s forwards;
       }
 
       .heart {
@@ -325,6 +327,12 @@
         }
       }
 
+      @keyframes fadeInAfterDelay {
+        to {
+          opacity: 1;
+        }
+      }
+
       /* Responsive design */
       @media (max-width: 768px) {
         .timer {
@@ -463,7 +471,7 @@
             Ich liebe dich jede Tag es bitzli meh 💕
           </div>
 
-          <div class="letter-signature">Din Pookie für immer, Isaac</div>
+          <div class="letter-signature">Din Pookie für immer, Isaac 💋</div>
         </div>
       </div>
     </section>
