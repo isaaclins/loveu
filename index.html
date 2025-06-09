@@ -1,11 +1,511 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Unser Einjähriges 💖</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #fce7f3 0%, #fef7ff 50%, #fce7f3 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Floating hearts animation */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(248, 187, 217, 0.7);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .heart:nth-child(1) {
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .heart:nth-child(2) {
+            left: 20%;
+            animation-delay: 1s;
+        }
+
+        .heart:nth-child(3) {
+            left: 30%;
+            animation-delay: 2s;
+        }
+
+        .heart:nth-child(4) {
+            left: 40%;
+            animation-delay: 3s;
+        }
+
+        .heart:nth-child(5) {
+            left: 50%;
+            animation-delay: 4s;
+        }
+
+        .heart:nth-child(6) {
+            left: 60%;
+            animation-delay: 5s;
+        }
+
+        .heart:nth-child(7) {
+            left: 70%;
+            animation-delay: 0.5s;
+        }
+
+        .heart:nth-child(8) {
+            left: 80%;
+            animation-delay: 1.5s;
+        }
+
+        .heart:nth-child(9) {
+            left: 90%;
+            animation-delay: 2.5s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(180deg);
+                opacity: 0.8;
+            }
+        }
+
+        /* Hero section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(252, 231, 243, 0.3), rgba(252, 231, 243, 0.3)),
+                url('https://images.unsplash.com/photo-1500375592092-40eb2168fd21?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            color: #be185d;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+            animation: fadeInUp 2s ease-out;
+        }
+
+        .hero p {
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            color: #9d174d;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+            animation: fadeInUp 2s ease-out 0.5s both;
+        }
+
+        /* Timer section */
+        .timer-section {
+            background: rgba(254, 254, 254, 0.9);
+            padding: 3rem 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .timer-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .timer-title {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            color: #be185d;
+            margin-bottom: 2rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .timer {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .timer-item {
+            background: linear-gradient(135deg, #fce7f3, #f8bbd9);
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(190, 24, 93, 0.1);
+            animation: scaleIn 0.8s ease-out;
+        }
+
+        .timer-number {
+            font-size: clamp(2rem, 6vw, 3rem);
+            font-weight: bold;
+            color: #be185d;
+            display: block;
+        }
+
+        .timer-label {
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            color: #9d174d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Love letter section */
+        .letter-section {
+            background: rgba(254, 254, 254, 0.95);
+            padding: 4rem 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .letter-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #fefefe, #fce7f3);
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 20px 50px rgba(190, 24, 93, 0.15);
+            border: 2px solid rgba(248, 187, 217, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .letter-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(248, 187, 217, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        .letter-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .letter-greeting {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: #be185d;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            animation: slideInLeft 1s ease-out;
+        }
+
+        .letter-text {
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            line-height: 1.8;
+            color: #831843;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .letter-signature {
+            text-align: right;
+            font-size: clamp(1.2rem, 3vw, 1.4rem);
+            color: #be185d;
+            font-style: italic;
+            margin-top: 2rem;
+            animation: slideInRight 1s ease-out 0.5s both;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .timer {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .letter-container {
+                padding: 2rem 1.5rem;
+                margin: 0 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .timer {
+                grid-template-columns: 1fr;
+            }
+
+            .timer-item {
+                padding: 1rem;
+            }
+        }
+
+        /* Scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Additional romantic touches */
+        .sparkle {
+            position: absolute;
+            color: rgba(248, 187, 217, 0.6);
+            animation: sparkle 3s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+
+            0%,
+            100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Hello World from the browser!!!!!</h1>
+    <!-- Floating hearts -->
+    <div class="hearts-container">
+        <div class="heart">💖</div>
+        <div class="heart">💕</div>
+        <div class="heart">💗</div>
+        <div class="heart">💖</div>
+        <div class="heart">💕</div>
+        <div class="heart">💗</div>
+        <div class="heart">💖</div>
+        <div class="heart">💕</div>
+        <div class="heart">💗</div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Unser Einjähriges</h1>
+        <p>Eine wunderschöne Reise zusammen 💖</p>
+    </section>
+
+    <!-- Timer Section -->
+    <section class="timer-section">
+        <div class="timer-container">
+            <h2 class="timer-title">Unsere gemeinsame Zeit</h2>
+            <div class="timer">
+                <div class="timer-item">
+                    <span class="timer-number" id="days">0</span>
+                    <span class="timer-label">Tage</span>
+                </div>
+                <div class="timer-item">
+                    <span class="timer-number" id="hours">0</span>
+                    <span class="timer-label">Stunden</span>
+                </div>
+                <div class="timer-item">
+                    <span class="timer-number" id="minutes">0</span>
+                    <span class="timer-label">Minuten</span>
+                </div>
+                <div class="timer-item">
+                    <span class="timer-number" id="seconds">0</span>
+                    <span class="timer-label">Sekunden</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Love Letter Section -->
+    <section class="letter-section">
+        <div class="letter-container">
+            <div class="letter-content">
+                <div class="letter-greeting">Hey mibabi!!!</div>
+
+                <div class="letter-text">
+                    <strong>Alles Gute zum Einjährigen! 💖</strong>
+                </div>
+
+                <div class="letter-text">
+                    Von unserem ersten Lachen bis zu all den wunderschönen Momenten – dieses Jahr mit dir war das
+                    schönste meines Lebens.
+                </div>
+
+                <div class="letter-text">
+                    Deshalb habe ich eine kleine Überraschung geplant… nur du, ich und das traumhafte Lugano. 🏞️✨
+                </div>
+
+                <div class="letter-text">
+                    Pack dein schönstes Lächeln ein, deinen Lieblingspulli – und mach dich bereit für ein Wochenende
+                    voller Liebe, Überraschungen und Kuscheleinheiten.
+                </div>
+
+                <div class="letter-text">
+                    Ich freue mich auf alles, was noch vor uns liegt.
+                </div>
+
+                <div class="letter-signature">
+                    Ich liebe dich – jeden Tag ein bisschen mehr. 💕
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Timer functionality
+        function updateTimer() {
+            const startDate = new Date('2024-06-08T00:00:00');
+            const now = new Date();
+            const timeDiff = now - startDate;
+
+            const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('seconds').textContent = seconds;
+        }
+
+        // Update timer immediately and then every second
+        updateTimer();
+        setInterval(updateTimer, 1000);
+
+        // Add sparkle effects randomly
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.textContent = '✨';
+            sparkle.style.left = Math.random() * 100 + '%';
+            sparkle.style.top = Math.random() * 100 + '%';
+            document.body.appendChild(sparkle);
+
+            setTimeout(() => {
+                sparkle.remove();
+            }, 3000);
+        }
+
+        // Create sparkles periodically
+        setInterval(createSparkle, 2000);
+
+        // Smooth scroll animations on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationDelay = '0s';
+                    entry.target.style.animationFillMode = 'both';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.addEventListener('DOMContentLoaded', function () {
+            const animatedElements = document.querySelectorAll('.timer-item, .letter-text');
+            animatedElements.forEach(el => observer.observe(el));
+        });
+    </script>
 </body>
+
 </html>
