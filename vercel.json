@@ -10,11 +10,11 @@
           "value": ".*curl.*"
         }
       ],
-      "destination": "/curl.sh"
+      "destination": "/curl.txt"
     },
     {
       "source": "/(.*)",
-      "destination": "/website.html"
+      "destination": "/index.html"
     }
   ]
 } 
