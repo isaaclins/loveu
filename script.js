@@ -112,8 +112,51 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Console easter egg
-console.log('%c👋 Hallo! Willkommen auf meinem Portfolio.', 'font-size: 20px; font-weight: bold; color: #2d5c8f;');
-console.log('%cIch bin Kaya – Kreative Gestalterin mit Leidenschaft für präzises Handwerk.', 'font-size: 14px; color: #666;');
-console.log('%cInteressiert an einer Zusammenarbeit? Lass uns reden!', 'font-size: 14px; color: #4a7fb8;');
+document.addEventListener('DOMContentLoaded', () => {
+    const cursor = document.querySelector('.cursor');
+
+    document.addEventListener('mousemove', e => {
+        cursor.setAttribute("style", "top: "+(e.pageY)+"px; left: "+(e.pageX)+"px;")
+    });
+
+    document.addEventListener('click', () => {
+        cursor.classList.add("expand");
+
+        setTimeout(() => {
+            cursor.classList.remove("expand");
+        }, 500)
+    });
+
+    // Overlay logic
+    const navLinks = document.querySelectorAll('nav a');
+    const overlays = document.querySelectorAll('.overlay');
+    const closeBtns = document.querySelectorAll('.close-btn');
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href');
+            const targetOverlay = document.querySelector(targetId);
+            if (targetOverlay) {
+                targetOverlay.classList.add('active');
+            }
+        });
+    });
+
+    closeBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            btn.closest('.overlay').classList.remove('active');
+        });
+    });
+
+    // Close overlay on escape key press
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            overlays.forEach(overlay => {
+                overlay.classList.remove('active');
+            });
+        }
+    });
+});
 

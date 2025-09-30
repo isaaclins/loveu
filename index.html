@@ -1,237 +1,84 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kaya – Kreative Gestalterin</title>
-    <meta name="description" content="Portfolio von Kaya – Kreative Gestalterin mit Leidenschaft für präzises Handwerk und künstlerische Arbeiten">
+    <title>Kaya – Creative Designer</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
 </head>
 <body>
-    <nav class="nav">
-        <div class="nav-inner">
-            <a href="#" class="logo">Kaya</a>
-            <div class="nav-links">
-                <a href="#work" class="nav-link">Arbeit</a>
-                <a href="#craft" class="nav-link">Handwerk</a>
-                <a href="#about" class="nav-link">Über mich</a>
-                <a href="#contact" class="nav-link">Kontakt</a>
+    <div class="cursor"></div>
+    <div class="container">
+        <header>
+            <nav>
+                <a href="#work">Work</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </header>
+        <main>
+            <h1 class="title">KAYA</h1>
+        </main>
+    </div>
+
+    <!-- Overlays -->
+    <div id="work" class="overlay">
+        <div class="overlay-content">
+            <a href="#" class="close-btn">&times;</a>
+            <h2>Work & Expertise</h2>
+            <p>With three years of experience as a painter EFZ, I combine technical precision with creative design. My strengths lie in clean execution, teamwork, and attention to detail.</p>
+            <div class="grid">
+                <div class="card">
+                    <h3>Painting</h3>
+                    <p>Surface preparation, filling, sanding, precise painting and glazing with the highest precision.</p>
+                </div>
+                <div class="card">
+                    <h3>Creative Design</h3>
+                    <p>A feel for colors, shapes, and material combinations—from idea to implementation.</p>
+                </div>
+                <div class="card">
+                    <h3>Teamwork</h3>
+                    <p>Experience in teams of 15 with reliable coordination and clear communication.</p>
+                </div>
+                <div class="card">
+                    <h3>Precision & Quality</h3>
+                    <p>Structured work planning, careful execution, and consistent quality control.</p>
+                </div>
             </div>
         </div>
-    </nav>
+    </div>
 
-    <main>
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    <span class="greeting">Hallo.</span>
-                    <span class="name">Ich bin Kaya.</span>
-                </h1>
-                <p class="hero-subtitle">
-                    Kreative Gestalterin mit Leidenschaft für präzises Handwerk, 
-                    künstlerische Arbeiten und sorgfältige Ausführung.
-                </p>
-                <div class="hero-tags">
-                    <span class="tag">Malerin EFZ</span>
-                    <span class="tag">Kreativität</span>
-                    <span class="tag">Präzision</span>
+    <div id="about" class="overlay">
+        <div class="overlay-content">
+            <a href="#" class="close-btn">&times;</a>
+            <h2>About Me</h2>
+            <p>I am Kaya, a creative and meticulous designer from Ottenbach, Switzerland. With my EFZ as a painter and three years of professional experience, I bring manual precision, team spirit, and a distinct creative flair.</p>
+            <div class="grid">
+                <div class="card">
+                    <h3>Crafts</h3>
+                    <p>Crocheting, artistic projects, and crafts sharpen my eye for detail and promote my creativity.</p>
+                </div>
+                <div class="card">
+                    <h3>Skills</h3>
+                    <p>Clean and reliable execution, high initiative, structured planning, and taking responsibility.</p>
+                </div>
+                <div class="card">
+                    <h3>Languages</h3>
+                    <p>German (Native), Polish (Native), English (School knowledge).</p>
                 </div>
             </div>
-        </section>
-
-        <!-- Work Section -->
-        <section id="work" class="section work">
-            <div class="container">
-                <h2 class="section-title">Arbeit & Expertise</h2>
-                <p class="section-intro">
-                    Mit drei Jahren Erfahrung als Malerin EFZ verbinde ich handwerkliche 
-                    Präzision mit kreativer Gestaltung. Meine Stärken liegen in sauberer 
-                    Ausführung, Teamarbeit und Liebe zum Detail.
-                </p>
-
-                <div class="work-grid">
-                    <div class="work-card" data-animate>
-                        <div class="card-icon">🎨</div>
-                        <h3>Malerarbeiten</h3>
-                        <p>Untergrundvorbereitung, Spachteln, Schleifen, exaktes Streichen und Lasieren mit höchster Präzision</p>
-                    </div>
-
-                    <div class="work-card" data-animate>
-                        <div class="card-icon">✨</div>
-                        <h3>Kreative Gestaltung</h3>
-                        <p>Gespür für Farben, Formen und Materialkombinationen – von der Idee bis zur Umsetzung</p>
-                    </div>
-
-                    <div class="work-card" data-animate>
-                        <div class="card-icon">🤝</div>
-                        <h3>Teamarbeit</h3>
-                        <p>Erfahrung in 15-köpfigen Teams mit verlässlicher Koordination und klarer Kommunikation</p>
-                    </div>
-
-                    <div class="work-card" data-animate>
-                        <div class="card-icon">📐</div>
-                        <h3>Präzision & Qualität</h3>
-                        <p>Strukturierte Arbeitsplanung, sorgfältige Ausführung und konsequente Qualitätskontrolle</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Craft Section -->
-        <section id="craft" class="section craft">
-            <div class="container">
-                <h2 class="section-title">Handwerk & Kreativität</h2>
-                <p class="section-intro">
-                    Neben der professionellen Arbeit widme ich mich leidenschaftlich 
-                    verschiedenen handwerklichen und künstlerischen Tätigkeiten.
-                </p>
-
-                <div class="craft-grid">
-                    <div class="craft-item" data-animate>
-                        <div class="craft-visual">🧶</div>
-                        <h3>Häkeln</h3>
-                        <p>Feinmotorische Präzision und kreative Mustergestaltung</p>
-                    </div>
-
-                    <div class="craft-item" data-animate>
-                        <div class="craft-visual">🎭</div>
-                        <h3>Künstlerische Werke</h3>
-                        <p>Experimentieren mit verschiedenen Materialien und Techniken</p>
-                    </div>
-
-                    <div class="craft-item" data-animate>
-                        <div class="craft-visual">✂️</div>
-                        <h3>Basteln</h3>
-                        <p>Ideen in ansprechende, praktische Ergebnisse überführen</p>
-                    </div>
-
-                    <div class="craft-item" data-animate>
-                        <div class="craft-visual">📚</div>
-                        <h3>Lesen</h3>
-                        <p>Inspiration und kontinuierliche Weiterbildung</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Skills Section -->
-        <section class="section skills">
-            <div class="container">
-                <h2 class="section-title">Kernkompetenzen</h2>
-                
-                <div class="skills-list">
-                    <div class="skill-category" data-animate>
-                        <h3>Arbeitsweise</h3>
-                        <ul>
-                            <li>Saubere und zuverlässige Ausführung</li>
-                            <li>Hohe Eigeninitiative und Motivation</li>
-                            <li>Strukturierte Planung und Organisation</li>
-                            <li>Verantwortungsübernahme für Material und Termine</li>
-                        </ul>
-                    </div>
-
-                    <div class="skill-category" data-animate>
-                        <h3>Soft Skills</h3>
-                        <ul>
-                            <li>Empathisch und geduldig</li>
-                            <li>Teamorientiert und kommunikativ</li>
-                            <li>Lösungsorientiert mit Blick fürs Detail</li>
-                            <li>Feedbackfähig und lernbereit</li>
-                        </ul>
-                    </div>
-
-                    <div class="skill-category" data-animate>
-                        <h3>Kreativität</h3>
-                        <ul>
-                            <li>Gespür für Farben und Formen</li>
-                            <li>Handwerkliche Präzision</li>
-                            <li>Ideen in Ergebnisse überführen</li>
-                            <li>Materialexpertise und Innovation</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <section id="about" class="section about">
-            <div class="container">
-                <h2 class="section-title">Über mich</h2>
-                
-                <div class="about-content">
-                    <div class="about-text" data-animate>
-                        <p class="intro-text">
-                            Ich bin Kaya, eine kreative und sorgfältige Gestalterin aus Ottenbach, 
-                            Schweiz. Mit meinem EFZ als Malerin und drei Jahren Berufserfahrung 
-                            bringe ich handwerkliche Präzision, Teamgeist und eine ausgeprägte 
-                            kreative Ader mit.
-                        </p>
-                        <p>
-                            Meine Arbeitsweise zeichnet sich durch Sorgfalt, Struktur und einen 
-                            hohen Qualitätsanspruch aus. Ich plane Arbeitsschritte vorab, bereite 
-                            Materialien organisiert vor und prüfe Ergebnisse systematisch. 
-                            Kreative Herausforderungen motivieren mich besonders.
-                        </p>
-                        <p>
-                            Neben der Arbeit liebe ich es, mich handwerklich zu betätigen – 
-                            sei es beim Häkeln, bei künstlerischen Projekten oder beim Basteln. 
-                            Diese Tätigkeiten schärfen mein Auge für Details und fördern meine 
-                            Kreativität.
-                        </p>
-                    </div>
-
-                    <div class="about-details" data-animate>
-                        <div class="detail-group">
-                            <h4>Ausbildung</h4>
-                            <p><strong>EFZ Malerin</strong> – 3 Jahre in Kleinfirma</p>
-                            <p>Berufswahlschule Limmattal (Gestalterisches Profil)</p>
-                            <p>Sekundarschule Sek A (⌀ 5.0)</p>
-                        </div>
-
-                        <div class="detail-group">
-                            <h4>Sprachen</h4>
-                            <p>Deutsch – Muttersprache</p>
-                            <p>Polnisch – Muttersprache</p>
-                            <p>Englisch – Schulkenntnisse</p>
-                        </div>
-
-                        <div class="detail-group">
-                            <h4>Wohnort</h4>
-                            <p>Ottenbach, Schweiz</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="section contact">
-            <div class="container">
-                <h2 class="section-title">Kontakt</h2>
-                <p class="section-intro">
-                    Interessiert an einer Zusammenarbeit? Ich freue mich über eine Nachricht!
-                </p>
-
-                <div class="contact-cta" data-animate>
-                    <a href="mailto:kontakt@kaya-portfolio.ch" class="btn-primary">
-                        Nachricht schreiben
-                    </a>
-                </div>
-
-                <div class="contact-info">
-                    <p>Kaya</p>
-                    <p>Ottenbach, Schweiz</p>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2025 Kaya. Gestaltet mit Sorgfalt und Kreativität.</p>
         </div>
-    </footer>
+    </div>
+
+    <div id="contact" class="overlay">
+        <div class="overlay-content">
+            <a href="#" class="close-btn">&times;</a>
+            <h2>Contact</h2>
+            <p>Interested in working together? I look forward to hearing from you!</p>
+            <a href="mailto:kontakt@kaya-portfolio.ch" class="email-link">Get in Touch</a>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
