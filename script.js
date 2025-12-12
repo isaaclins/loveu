@@ -19,15 +19,88 @@ const backBtn = document.getElementById('backBtn');
 const undoBtn = document.getElementById('undoBtn');
 const nextBtn = document.getElementById('nextBtn');
 
+// Screen navigation
+const showScreen = (screenId) => {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const target = document.getElementById(screenId);
+    if (target) target.classList.add('active');
+};
+
+// Back button handlers
+document.querySelectorAll('.back-btn[data-goto]').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const target = btn.dataset.goto;
+        if (target) showScreen(target);
+    });
+});
+
+// Home screen buttons
+document.getElementById('startCreateBtn')?.addEventListener('click', () => showScreen('uploadScreen'));
+document.getElementById('startGuideBtn')?.addEventListener('click', () => showScreen('guideLoadScreen'));
+
+// Upload screen: Continue button
+document.getElementById('toSettingsBtn')?.addEventListener('click', () => showScreen('settingsScreen'));
+
+// Stepper buttons
+document.querySelectorAll('.stepper-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const target = document.getElementById(btn.dataset.target);
+        if (target) {
+            const delta = parseInt(btn.dataset.delta) || 0;
+            const min = parseInt(target.min) || 0;
+            const max = parseInt(target.max) || 100;
+            target.value = Math.min(max, Math.max(min, parseInt(target.value) + delta));
+        }
+    });
+});
+
 const guideMeta = document.getElementById('guideMeta');
 const guideCurrent = document.getElementById('guideCurrent');
 const guideNext = document.getElementById('guideNext');
 const progressFill = document.getElementById('progressFill');
 const progressText = document.getElementById('progressText');
 
+const tutorialBtn = document.getElementById('tutorialBtn');
+const tutorialOverlay = document.getElementById('tutorialOverlay');
+const tutorialClose = document.getElementById('tutorialClose');
+const tutorialStepEl = document.getElementById('tutorialStep');
+const tutorialProgressBar = document.getElementById('tutorialProgressBar');
+const tutorialBack = document.getElementById('tutorialBack');
+const tutorialNext = document.getElementById('tutorialNext');
+const tutorialAction = document.getElementById('tutorialAction');
+
 let loadedImage = null;
 let quantizedData = null; // { palette: [ {r,g,b,hex} ], grid: number[][], cols, rows }
 let guideState = { runs: [], palette: [], grid: [], pointer: 0, history: [] };
+const tutorialSteps = [
+    'Welcome! This tool turns any picture into an easy stitch grid. Tap <strong>Next</strong> to follow along.',
+    'Step 1: Press <strong>Choose file</strong> and pick a photo. If you have no photo, we will load a demo for you.',
+    'Step 2: The default numbers already work. You can keep them. Tap <strong>Make my grid</strong> to see the preview.',
+    'Step 3: Press <strong>Send to guided stepper</strong> to highlight each run you need to stitch.',
+    'Ready to try? Tap <strong>Try it for me</strong> and we will load a colorful demo grid so you can click Next and see it move.'
+];
+let tutorialPointer = 0;
+
+const demoQuantized = {
+    cols: 8,
+    rows: 8,
+    palette: [
+        { r: 234, g: 67, b: 53, hex: '#ea4335' }, // red
+        { r: 52, g: 168, b: 83, hex: '#34a853' }, // green
+        { r: 66, g: 133, b: 244, hex: '#4285f4' }, // blue
+        { r: 251, g: 188, b: 5, hex: '#fbbc05' }  // yellow
+    ],
+    grid: [
+        [0,0,0,0,1,1,1,1],
+        [0,0,2,2,2,1,1,1],
+        [0,2,2,2,2,1,3,1],
+        [0,2,2,3,3,3,3,1],
+        [0,2,3,3,3,3,3,1],
+        [0,2,2,3,1,1,3,1],
+        [0,0,2,2,1,1,1,1],
+        [0,0,0,0,1,1,1,1]
+    ]
+};
 
 const ctxOriginal = originalCanvas.getContext('2d');
 const ctxGrid = gridCanvas.getContext('2d');
@@ -356,6 +429,11 @@ const handleImageLoad = (file) => {
         img.onload = () => {
             loadedImage = img;
             drawCanvasImage(originalCanvas, img);
+            // Show the preview, hide placeholder, enable continue
+            originalCanvas.classList.remove('hidden');
+            document.getElementById('uploadPlaceholder')?.classList.add('hidden');
+            const continueBtn = document.getElementById('toSettingsBtn');
+            if (continueBtn) continueBtn.disabled = false;
         };
         img.src = reader.result;
     };
@@ -392,6 +470,9 @@ const processImage = () => {
     downloadPngBtn.disabled = false;
     sendToGuideBtn.disabled = false;
     useLastBtn.disabled = false;
+    
+    // Navigate to result screen
+    showScreen('resultScreen');
 };
 
 const downloadJson = () => {
@@ -451,6 +532,9 @@ const loadGuide = (data) => {
     nextBtn.disabled = guideState.runs.length === 0;
     resetGuideBtn.disabled = false;
     updateGuideUI();
+    
+    // Navigate to guide screen
+    showScreen('guideScreen');
 };
 
 const updateGuideUI = () => {
@@ -510,6 +594,51 @@ const resetGuide = () => {
     updateGuideUI();
 };
 
+const openTutorial = () => {
+    tutorialOverlay.classList.add('show');
+    tutorialPointer = 0;
+    renderTutorial();
+};
+
+const closeTutorial = () => {
+    tutorialOverlay.classList.remove('show');
+};
+
+const renderTutorial = () => {
+    const step = tutorialSteps[tutorialPointer];
+    tutorialStepEl.innerHTML = step;
+    const pct = Math.round(((tutorialPointer + 1) / tutorialSteps.length) * 100);
+    tutorialProgressBar.style.width = `${pct}%`;
+    tutorialBack.disabled = tutorialPointer === 0;
+    tutorialNext.disabled = tutorialPointer === tutorialSteps.length - 1;
+};
+
+const tutorialNextStep = () => {
+    if (tutorialPointer < tutorialSteps.length - 1) {
+        tutorialPointer += 1;
+        renderTutorial();
+    }
+};
+
+const tutorialPrevStep = () => {
+    if (tutorialPointer > 0) {
+        tutorialPointer -= 1;
+        renderTutorial();
+    }
+};
+
+const tutorialLoadDemo = () => {
+    quantizedData = demoQuantized;
+    updatePaletteUI(quantizedData.palette);
+    drawGrid(gridCanvas, quantizedData.palette, quantizedData.grid);
+    downloadJsonBtn.disabled = false;
+    downloadPngBtn.disabled = false;
+    sendToGuideBtn.disabled = false;
+    useLastBtn.disabled = false;
+    loadGuide(quantizedData);
+    closeTutorial();
+};
+
 imageInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file) handleImageLoad(file);
@@ -545,6 +674,19 @@ resetGuideBtn.addEventListener('click', resetGuide);
 backBtn.addEventListener('click', back);
 nextBtn.addEventListener('click', advance);
 undoBtn.addEventListener('click', undo);
+
+tutorialBtn.addEventListener('click', openTutorial);
+tutorialClose.addEventListener('click', closeTutorial);
+tutorialNext.addEventListener('click', tutorialNextStep);
+tutorialBack.addEventListener('click', tutorialPrevStep);
+tutorialAction.addEventListener('click', tutorialLoadDemo);
+
+// Allow ESC to close tutorial overlay for convenience.
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && tutorialOverlay.classList.contains('show')) {
+        closeTutorial();
+    }
+});
 
 document.addEventListener('keydown', (e) => {
     if (guideState.runs.length === 0) return;

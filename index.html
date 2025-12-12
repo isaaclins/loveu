@@ -2,138 +2,225 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>loveu.ch – Crochet Grid Tools</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
 <body>
-    <div class="page">
-        <header class="topbar">
-            <div class="brand"><span class="brand-mark">loveu</span><span class="brand-dot">.ch</span></div>
-            <div class="tagline">Crochet grid maker & guided stepper</div>
-        </header>
-
-        <main class="layout">
-            <section class="panel" id="converter">
-                <div class="panel-head">
-                    <h1>Image → Grid</h1>
-                    <p class="muted">Pick an image, choose grid size and number of colors, then export the palette + chart.</p>
+    <div class="app">
+        <!-- Landing / Mode Selection -->
+        <section class="screen active" id="homeScreen">
+            <div class="home-content">
+                <div class="logo">
+                    <span class="logo-text">loveu</span><span class="logo-dot">.ch</span>
                 </div>
-
-                <div class="pill-steps">
-                    <div class="pill">1. Add photo</div>
-                    <div class="pill">2. Set rows & columns</div>
-                    <div class="pill">3. Pick colors</div>
-                    <div class="pill">4. Press Process</div>
-                    <div class="pill">5. Save or send</div>
+                <p class="home-subtitle">Turn any photo into a crochet pattern</p>
+                
+                <div class="home-buttons">
+                    <button class="big-btn primary" id="startCreateBtn">
+                        <span class="btn-icon">🎨</span>
+                        <span class="btn-label">Create Pattern</span>
+                        <span class="btn-hint">From a photo</span>
+                    </button>
+                    <button class="big-btn secondary" id="startGuideBtn">
+                        <span class="btn-icon">🧶</span>
+                        <span class="btn-label">Start Stitching</span>
+                        <span class="btn-hint">Follow a pattern</span>
+                    </button>
                 </div>
+            </div>
+        </section>
 
-                <div class="controls">
-                    <label class="field">Image
-                        <input type="file" id="imageInput" accept="image/*">
-                    </label>
-                    <div class="field-row">
-                        <label class="field">Columns
-                            <input type="number" id="colsInput" value="30" min="2" max="120" step="1">
-                        </label>
-                        <label class="field">Rows
-                            <input type="number" id="rowsInput" value="30" min="2" max="120" step="1">
-                        </label>
-                        <label class="field">Colors
-                            <input type="number" id="colorsInput" value="5" min="2" max="16" step="1">
-                        </label>
+        <!-- CREATE FLOW: Step 1 - Upload -->
+        <section class="screen" id="uploadScreen">
+            <header class="screen-header">
+                <button class="back-btn" data-goto="homeScreen">←</button>
+                <div class="step-indicator">Step 1 of 3</div>
+            </header>
+            
+            <div class="screen-body">
+                <h1 class="screen-title">Pick a photo</h1>
+                <p class="screen-desc">Choose any image you want to turn into a pattern</p>
+                
+                <label class="upload-zone" id="uploadZone">
+                    <input type="file" id="imageInput" accept="image/*" hidden>
+                    <div class="upload-placeholder" id="uploadPlaceholder">
+                        <span class="upload-icon">📷</span>
+                        <span class="upload-text">Tap to choose photo</span>
                     </div>
-                    <div class="actions">
-                        <button id="processBtn">Make my grid</button>
-                        <button id="downloadJsonBtn" disabled>Download grid (.json)</button>
-                        <button id="downloadPngBtn" disabled>Download chart (.png)</button>
-                        <button id="sendToGuideBtn" disabled>Send to guided stepper</button>
-                    </div>
-                </div>
+                    <canvas id="originalCanvas" class="upload-preview hidden"></canvas>
+                </label>
+            </div>
+            
+            <footer class="screen-footer">
+                <button class="nav-btn primary" id="toSettingsBtn" disabled>Continue →</button>
+            </footer>
+        </section>
 
-                <div class="helper-card">
-                    <div class="helper-title">Zero-confusion mode</div>
-                    <ul class="helper-list">
-                        <li>Tap <strong>Choose file</strong> and pick any photo or screenshot.</li>
-                        <li>If you are unsure, leave the numbers as-is. They already work well.</li>
-                        <li>Press <strong>Make my grid</strong> and wait a second — the preview fills itself.</li>
-                        <li>Save the chart or press <strong>Send to guided stepper</strong> to start stitching.</li>
-                    </ul>
-                </div>
-
-                <div class="preview-grid">
-                    <div class="preview-block">
-                        <h3>Original</h3>
-                        <div class="canvas-wrap"><canvas id="originalCanvas"></canvas></div>
-                    </div>
-                    <div class="preview-block">
-                        <h3>Quantized Grid</h3>
-                        <div class="canvas-wrap"><canvas id="gridCanvas"></canvas></div>
-                    </div>
-                    <div class="preview-block">
-                        <h3>Palette</h3>
-                        <div id="paletteSwatches" class="palette"></div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="panel" id="guided">
-                <div class="panel-head">
-                    <h1>Guided Stepper</h1>
-                    <p class="muted">Import a saved grid to get color-by-color runs with a visual cursor.</p>
-                </div>
-
-                <div class="pill-steps">
-                    <div class="pill">1. Load grid</div>
-                    <div class="pill">2. Press Next</div>
-                    <div class="pill">3. Follow highlighted row</div>
-                    <div class="pill">4. Undo if needed</div>
-                </div>
-
-                <div class="controls">
-                    <label class="field">Import grid (.json)
-                        <input type="file" id="gridInput" accept="application/json">
-                    </label>
-                    <div class="actions">
-                        <button id="useLastBtn" disabled>Use last converted grid</button>
-                        <button id="resetGuideBtn" disabled>Reset</button>
-                    </div>
-                </div>
-
-                <div class="helper-card">
-                    <div class="helper-title">How to step through</div>
-                    <ul class="helper-list">
-                        <li>Press <strong>Use last converted grid</strong> or import a saved file.</li>
-                        <li>Tap <strong>Next</strong> — the highlighted bar shows exactly what to stitch.</li>
-                        <li>Need to go back? Tap <strong>Undo</strong> or the <strong>Back</strong> button.</li>
-                        <li>Keep tapping <strong>Next</strong> until the progress bar reaches 100%.</li>
-                    </ul>
-                </div>
-
-                <div class="guide-layout">
-                    <div class="guide-card">
-                        <div class="guide-meta" id="guideMeta">No grid loaded.</div>
-                        <div class="guide-current" id="guideCurrent">—</div>
-                        <div class="guide-next" id="guideNext">Next: —</div>
-                        <div class="guide-progress">
-                            <div class="progress-bar">
-                                <div class="progress-fill" id="progressFill"></div>
-                            </div>
-                            <span id="progressText">0%</span>
-                        </div>
-                        <div class="actions">
-                            <button id="backBtn" disabled>Back</button>
-                            <button id="undoBtn" disabled>Undo</button>
-                            <button id="nextBtn" disabled>Next</button>
+        <!-- CREATE FLOW: Step 2 - Settings -->
+        <section class="screen" id="settingsScreen">
+            <header class="screen-header">
+                <button class="back-btn" data-goto="uploadScreen">←</button>
+                <div class="step-indicator">Step 2 of 3</div>
+            </header>
+            
+            <div class="screen-body">
+                <h1 class="screen-title">Adjust settings</h1>
+                <p class="screen-desc">These defaults work great — or tweak them!</p>
+                
+                <div class="settings-grid">
+                    <div class="setting-card">
+                        <label class="setting-label">Grid Width</label>
+                        <div class="stepper">
+                            <button class="stepper-btn" data-target="colsInput" data-delta="-5">−</button>
+                            <input type="number" id="colsInput" value="30" min="5" max="100">
+                            <button class="stepper-btn" data-target="colsInput" data-delta="5">+</button>
                         </div>
                     </div>
-                    <div class="guide-visual">
-                        <div class="canvas-wrap"><canvas id="guideCanvas"></canvas></div>
+                    <div class="setting-card">
+                        <label class="setting-label">Grid Height</label>
+                        <div class="stepper">
+                            <button class="stepper-btn" data-target="rowsInput" data-delta="-5">−</button>
+                            <input type="number" id="rowsInput" value="30" min="5" max="100">
+                            <button class="stepper-btn" data-target="rowsInput" data-delta="5">+</button>
+                        </div>
+                    </div>
+                    <div class="setting-card full">
+                        <label class="setting-label">Number of Colors</label>
+                        <div class="stepper">
+                            <button class="stepper-btn" data-target="colorsInput" data-delta="-1">−</button>
+                            <input type="number" id="colorsInput" value="5" min="2" max="12">
+                            <button class="stepper-btn" data-target="colorsInput" data-delta="1">+</button>
+                        </div>
                     </div>
                 </div>
-            </section>
-        </main>
+            </div>
+            
+            <footer class="screen-footer">
+                <button class="nav-btn primary" id="processBtn">
+                    <span class="btn-spinner hidden"></span>
+                    <span>Create Pattern ✨</span>
+                </button>
+            </footer>
+        </section>
+
+        <!-- CREATE FLOW: Step 3 - Result -->
+        <section class="screen" id="resultScreen">
+            <header class="screen-header">
+                <button class="back-btn" data-goto="settingsScreen">←</button>
+                <div class="step-indicator">Done! 🎉</div>
+            </header>
+            
+            <div class="screen-body">
+                <h1 class="screen-title">Your pattern is ready</h1>
+                
+                <div class="result-preview">
+                    <canvas id="gridCanvas"></canvas>
+                </div>
+                
+                <div class="palette-section">
+                    <h3 class="palette-title">Your colors</h3>
+                    <div id="paletteSwatches" class="palette"></div>
+                </div>
+            </div>
+            
+            <footer class="screen-footer stacked">
+                <button class="nav-btn primary" id="sendToGuideBtn">Start Stitching 🧶</button>
+                <div class="secondary-actions">
+                    <button class="icon-btn" id="downloadPngBtn" title="Save as image">
+                        <span>📥</span> Save Image
+                    </button>
+                    <button class="icon-btn" id="downloadJsonBtn" title="Save pattern file">
+                        <span>💾</span> Save Pattern
+                    </button>
+                </div>
+            </footer>
+        </section>
+
+        <!-- GUIDE FLOW: Load Pattern -->
+        <section class="screen" id="guideLoadScreen">
+            <header class="screen-header">
+                <button class="back-btn" data-goto="homeScreen">←</button>
+                <div class="step-indicator">Load Pattern</div>
+            </header>
+            
+            <div class="screen-body centered">
+                <h1 class="screen-title">Load your pattern</h1>
+                <p class="screen-desc">Import a saved pattern to start stitching</p>
+                
+                <div class="load-options">
+                    <label class="load-option">
+                        <input type="file" id="gridInput" accept="application/json" hidden>
+                        <span class="load-icon">📁</span>
+                        <span class="load-text">Open saved pattern</span>
+                    </label>
+                    <button class="load-option" id="useLastBtn" disabled>
+                        <span class="load-icon">⏱️</span>
+                        <span class="load-text">Use last pattern</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- GUIDE FLOW: Stepper -->
+        <section class="screen" id="guideScreen">
+            <header class="screen-header">
+                <button class="back-btn" data-goto="guideLoadScreen">←</button>
+                <div class="progress-mini">
+                    <div class="progress-mini-fill" id="progressFill"></div>
+                </div>
+                <span class="progress-text" id="progressText">0%</span>
+            </header>
+            
+            <div class="screen-body guide-body">
+                <div class="guide-instruction">
+                    <div class="guide-meta" id="guideMeta">Row 1</div>
+                    <div class="guide-current" id="guideCurrent">—</div>
+                    <div class="guide-next" id="guideNext">Next: —</div>
+                </div>
+                
+                <div class="guide-canvas-wrap">
+                    <canvas id="guideCanvas"></canvas>
+                </div>
+            </div>
+            
+            <footer class="screen-footer guide-footer">
+                <button class="guide-btn" id="undoBtn" disabled>
+                    <span>↩️</span> Undo
+                </button>
+                <button class="guide-btn big primary" id="nextBtn" disabled>
+                    Next →
+                </button>
+                <button class="guide-btn" id="resetGuideBtn" disabled>
+                    <span>🔄</span> Reset
+                </button>
+            </footer>
+        </section>
+
+        <!-- Hidden back button for compatibility -->
+        <button id="backBtn" hidden disabled></button>
     </div>
+
+    <!-- Tutorial overlay (simplified) -->
+    <div class="tutorial-overlay" id="tutorialOverlay">
+        <div class="tutorial-modal">
+            <div class="tutorial-head">
+                <div class="tutorial-title">Quick Start</div>
+                <button class="tutorial-close" id="tutorialClose" aria-label="Close">×</button>
+            </div>
+            <div class="tutorial-step" id="tutorialStep">Loading…</div>
+            <div class="tutorial-progress"><div id="tutorialProgressBar"></div></div>
+            <div class="tutorial-actions">
+                <button id="tutorialBack">Back</button>
+                <button id="tutorialAction">Try Demo</button>
+                <button id="tutorialNext">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <button class="fab-help" id="tutorialBtn" aria-label="Help">?</button>
 
     <script src="script.js"></script>
 </body>
