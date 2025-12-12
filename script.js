@@ -18,12 +18,18 @@ const resetGuideBtn = document.getElementById('resetGuideBtn');
 const backBtn = document.getElementById('backBtn');
 const undoBtn = document.getElementById('undoBtn');
 const nextBtn = document.getElementById('nextBtn');
+const fabHelp = document.getElementById('tutorialBtn');
 
 // Screen navigation
 const showScreen = (screenId) => {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     const target = document.getElementById(screenId);
     if (target) target.classList.add('active');
+    
+    // Hide FAB on guide screen
+    if (fabHelp) {
+        fabHelp.style.display = (screenId === 'guideScreen') ? 'none' : '';
+    }
 };
 
 // Back button handlers
