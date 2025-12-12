@@ -37,6 +37,49 @@ const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
 
 const rgbToHex = ({ r, g, b }) => '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
 
+// Very lightweight hue-based name for user-friendly labels.
+const hexToColorName = (hex) => {
+    const clean = hex.replace('#', '');
+    const num = parseInt(clean, 16);
+    const r = (num >> 16) & 255;
+    const g = (num >> 8) & 255;
+    const b = num & 255;
+    const r1 = r / 255;
+    const g1 = g / 255;
+    const b1 = b / 255;
+    const max = Math.max(r1, g1, b1);
+    const min = Math.min(r1, g1, b1);
+    const d = max - min;
+    const l = (max + min) / 2;
+    let h = 0;
+    if (d !== 0) {
+        if (max === r1) h = ((g1 - b1) / d) % 6;
+        else if (max === g1) h = (b1 - r1) / d + 2;
+        else h = (r1 - g1) / d + 4;
+        h *= 60;
+        if (h < 0) h += 360;
+    }
+    const s = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1));
+
+    if (l <= 0.08) return 'black';
+    if (l >= 0.92) return 'white';
+    if (s < 0.08) return 'gray';
+
+    if (h < 15 || h >= 345) return 'red';
+    if (h < 45) return 'orange';
+    if (h < 70) return 'yellow';
+    if (h < 95) return 'lime';
+    if (h < 150) return 'green';
+    if (h < 180) return 'teal';
+    if (h < 205) return 'cyan';
+    if (h < 225) return 'sky';
+    if (h < 255) return 'blue';
+    if (h < 275) return 'indigo';
+    if (h < 300) return 'purple';
+    if (h < 325) return 'magenta';
+    return 'pink';
+};
+
 const distance = (a, b) => {
     const dr = a.r - b.r;
     const dg = a.g - b.g;
@@ -425,8 +468,9 @@ const updateGuideUI = () => {
     const run = runs[pointer];
     const nextRun = runs[pointer + 1];
     const color = palette[run.colorIndex];
+    const colorName = color ? hexToColorName(color.hex) : `color ${run.colorIndex + 1}`;
     guideMeta.textContent = `Row ${run.row + 1} of ${grid.length}, run ${pointer + 1} of ${runs.length}`;
-    guideCurrent.textContent = `${run.length} × color ${run.colorIndex + 1} (${color.hex}) starting at col ${run.startCol + 1}`;
+    guideCurrent.textContent = `${run.length} × color ${run.colorIndex + 1} (${colorName}) starting at col ${run.startCol + 1}`;
     guideNext.textContent = nextRun ? `Next: ${nextRun.length} × color ${nextRun.colorIndex + 1}` : 'Next: done';
 
     const pct = Math.round(((pointer + 1) / runs.length) * 100);

@@ -9,7 +9,7 @@
 <body>
     <div class="page">
         <header class="topbar">
-            <div class="brand">loveu.ch</div>
+            <div class="brand"><span class="brand-mark">loveu</span><span class="brand-dot">.ch</span></div>
             <div class="tagline">Crochet grid maker & guided stepper</div>
         </header>
 
@@ -18,6 +18,14 @@
                 <div class="panel-head">
                     <h1>Image → Grid</h1>
                     <p class="muted">Pick an image, choose grid size and number of colors, then export the palette + chart.</p>
+                </div>
+
+                <div class="pill-steps">
+                    <div class="pill">1. Add photo</div>
+                    <div class="pill">2. Set rows & columns</div>
+                    <div class="pill">3. Pick colors</div>
+                    <div class="pill">4. Press Process</div>
+                    <div class="pill">5. Save or send</div>
                 </div>
 
                 <div class="controls">
@@ -36,11 +44,21 @@
                         </label>
                     </div>
                     <div class="actions">
-                        <button id="processBtn">Process image</button>
+                        <button id="processBtn">Make my grid</button>
                         <button id="downloadJsonBtn" disabled>Download grid (.json)</button>
                         <button id="downloadPngBtn" disabled>Download chart (.png)</button>
                         <button id="sendToGuideBtn" disabled>Send to guided stepper</button>
                     </div>
+                </div>
+
+                <div class="helper-card">
+                    <div class="helper-title">Zero-confusion mode</div>
+                    <ul class="helper-list">
+                        <li>Tap <strong>Choose file</strong> and pick any photo or screenshot.</li>
+                        <li>If you are unsure, leave the numbers as-is. They already work well.</li>
+                        <li>Press <strong>Make my grid</strong> and wait a second — the preview fills itself.</li>
+                        <li>Save the chart or press <strong>Send to guided stepper</strong> to start stitching.</li>
+                    </ul>
                 </div>
 
                 <div class="preview-grid">
@@ -65,6 +83,13 @@
                     <p class="muted">Import a saved grid to get color-by-color runs with a visual cursor.</p>
                 </div>
 
+                <div class="pill-steps">
+                    <div class="pill">1. Load grid</div>
+                    <div class="pill">2. Press Next</div>
+                    <div class="pill">3. Follow highlighted row</div>
+                    <div class="pill">4. Undo if needed</div>
+                </div>
+
                 <div class="controls">
                     <label class="field">Import grid (.json)
                         <input type="file" id="gridInput" accept="application/json">
@@ -73,6 +98,16 @@
                         <button id="useLastBtn" disabled>Use last converted grid</button>
                         <button id="resetGuideBtn" disabled>Reset</button>
                     </div>
+                </div>
+
+                <div class="helper-card">
+                    <div class="helper-title">How to step through</div>
+                    <ul class="helper-list">
+                        <li>Press <strong>Use last converted grid</strong> or import a saved file.</li>
+                        <li>Tap <strong>Next</strong> — the highlighted bar shows exactly what to stitch.</li>
+                        <li>Need to go back? Tap <strong>Undo</strong> or the <strong>Back</strong> button.</li>
+                        <li>Keep tapping <strong>Next</strong> until the progress bar reaches 100%.</li>
+                    </ul>
                 </div>
 
                 <div class="guide-layout">
