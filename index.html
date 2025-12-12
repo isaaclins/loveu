@@ -3,80 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kaya – Creative Designer</title>
+    <title>loveu.ch – Crochet Grid Tools</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="cursor"></div>
-    <div class="container">
-        <header>
-            <nav>
-                <a href="#work">Work</a>
-                <a href="#about">About</a>
-                <a href="#contact">Contact</a>
-            </nav>
+    <div class="page">
+        <header class="topbar">
+            <div class="brand">loveu.ch</div>
+            <div class="tagline">Crochet grid maker & guided stepper</div>
         </header>
-        <main>
-            <h1 class="title">KAYA</h1>
+
+        <main class="layout">
+            <section class="panel" id="converter">
+                <div class="panel-head">
+                    <h1>Image → Grid</h1>
+                    <p class="muted">Pick an image, choose grid size and number of colors, then export the palette + chart.</p>
+                </div>
+
+                <div class="controls">
+                    <label class="field">Image
+                        <input type="file" id="imageInput" accept="image/*">
+                    </label>
+                    <div class="field-row">
+                        <label class="field">Columns
+                            <input type="number" id="colsInput" value="30" min="2" max="120" step="1">
+                        </label>
+                        <label class="field">Rows
+                            <input type="number" id="rowsInput" value="30" min="2" max="120" step="1">
+                        </label>
+                        <label class="field">Colors
+                            <input type="number" id="colorsInput" value="5" min="2" max="16" step="1">
+                        </label>
+                    </div>
+                    <div class="actions">
+                        <button id="processBtn">Process image</button>
+                        <button id="downloadJsonBtn" disabled>Download grid (.json)</button>
+                        <button id="downloadPngBtn" disabled>Download chart (.png)</button>
+                        <button id="sendToGuideBtn" disabled>Send to guided stepper</button>
+                    </div>
+                </div>
+
+                <div class="preview-grid">
+                    <div class="preview-block">
+                        <h3>Original</h3>
+                        <div class="canvas-wrap"><canvas id="originalCanvas"></canvas></div>
+                    </div>
+                    <div class="preview-block">
+                        <h3>Quantized Grid</h3>
+                        <div class="canvas-wrap"><canvas id="gridCanvas"></canvas></div>
+                    </div>
+                    <div class="preview-block">
+                        <h3>Palette</h3>
+                        <div id="paletteSwatches" class="palette"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel" id="guided">
+                <div class="panel-head">
+                    <h1>Guided Stepper</h1>
+                    <p class="muted">Import a saved grid to get color-by-color runs with a visual cursor.</p>
+                </div>
+
+                <div class="controls">
+                    <label class="field">Import grid (.json)
+                        <input type="file" id="gridInput" accept="application/json">
+                    </label>
+                    <div class="actions">
+                        <button id="useLastBtn" disabled>Use last converted grid</button>
+                        <button id="resetGuideBtn" disabled>Reset</button>
+                    </div>
+                </div>
+
+                <div class="guide-layout">
+                    <div class="guide-card">
+                        <div class="guide-meta" id="guideMeta">No grid loaded.</div>
+                        <div class="guide-current" id="guideCurrent">—</div>
+                        <div class="guide-next" id="guideNext">Next: —</div>
+                        <div class="guide-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <span id="progressText">0%</span>
+                        </div>
+                        <div class="actions">
+                            <button id="backBtn" disabled>Back</button>
+                            <button id="undoBtn" disabled>Undo</button>
+                            <button id="nextBtn" disabled>Next</button>
+                        </div>
+                    </div>
+                    <div class="guide-visual">
+                        <div class="canvas-wrap"><canvas id="guideCanvas"></canvas></div>
+                    </div>
+                </div>
+            </section>
         </main>
-    </div>
-
-    <!-- Overlays -->
-    <div id="work" class="overlay">
-        <div class="overlay-content">
-            <a href="#" class="close-btn">&times;</a>
-            <h2>Work & Expertise</h2>
-            <p>With three years of experience as a painter EFZ, I combine technical precision with creative design. My strengths lie in clean execution, teamwork, and attention to detail.</p>
-            <div class="grid">
-                <div class="card">
-                    <h3>Painting</h3>
-                    <p>Surface preparation, filling, sanding, precise painting and glazing with the highest precision.</p>
-                </div>
-                <div class="card">
-                    <h3>Creative Design</h3>
-                    <p>A feel for colors, shapes, and material combinations—from idea to implementation.</p>
-                </div>
-                <div class="card">
-                    <h3>Teamwork</h3>
-                    <p>Experience in teams of 15 with reliable coordination and clear communication.</p>
-                </div>
-                <div class="card">
-                    <h3>Precision & Quality</h3>
-                    <p>Structured work planning, careful execution, and consistent quality control.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="about" class="overlay">
-        <div class="overlay-content">
-            <a href="#" class="close-btn">&times;</a>
-            <h2>About Me</h2>
-            <p>I am Kaya, a creative and meticulous designer from Ottenbach, Switzerland. With my EFZ as a painter and three years of professional experience, I bring manual precision, team spirit, and a distinct creative flair.</p>
-            <div class="grid">
-                <div class="card">
-                    <h3>Crafts</h3>
-                    <p>Crocheting, artistic projects, and crafts sharpen my eye for detail and promote my creativity.</p>
-                </div>
-                <div class="card">
-                    <h3>Skills</h3>
-                    <p>Clean and reliable execution, high initiative, structured planning, and taking responsibility.</p>
-                </div>
-                <div class="card">
-                    <h3>Languages</h3>
-                    <p>German (Native), Polish (Native), English (School knowledge).</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="contact" class="overlay">
-        <div class="overlay-content">
-            <a href="#" class="close-btn">&times;</a>
-            <h2>Contact</h2>
-            <p>Interested in working together? I look forward to hearing from you!</p>
-            <a href="mailto:kontakt@kaya-portfolio.ch" class="email-link">Get in Touch</a>
-        </div>
     </div>
 
     <script src="script.js"></script>
