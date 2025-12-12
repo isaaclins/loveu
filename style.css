@@ -28,6 +28,9 @@ html, body {
     background: var(--bg);
     color: var(--text);
     overflow-x: hidden;
+    max-width: 100vw;
+    overscroll-behavior-x: none;
+    touch-action: pan-y;
 }
 
 /* ===== APP CONTAINER ===== */
@@ -35,6 +38,8 @@ html, body {
     min-height: 100vh;
     min-height: 100dvh;
     position: relative;
+    overflow-x: hidden;
+    max-width: 100vw;
 }
 
 /* ===== SCREEN SYSTEM ===== */
@@ -45,6 +50,8 @@ html, body {
     min-height: 100dvh;
     padding: 0 20px env(safe-area-inset-bottom);
     animation: fadeIn 0.3s ease;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .screen.active {
