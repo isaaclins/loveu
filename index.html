@@ -29,6 +29,11 @@
                         <span class="btn-label">Start Stitching</span>
                         <span class="btn-hint">Follow a pattern</span>
                     </button>
+                    <button class="big-btn tertiary" id="startPaintByNumberBtn">
+                        <span class="btn-icon">🔢</span>
+                        <span class="btn-label">Paint by Numbers</span>
+                        <span class="btn-hint">Create coloring page</span>
+                    </button>
                 </div>
             </div>
         </section>
@@ -196,6 +201,99 @@
                 <button class="guide-btn icon-only" id="resetGuideBtn" disabled title="Reset">
                     🔄
                 </button>
+            </footer>
+        </section>
+
+        <!-- PAINT BY NUMBERS FLOW: Upload -->
+        <section class="screen" id="pbnUploadScreen">
+            <header class="screen-header">
+                <button class="back-btn" data-goto="homeScreen">←</button>
+                <div class="step-indicator">Step 1 of 3</div>
+            </header>
+            
+            <div class="screen-body">
+                <h1 class="screen-title">Pick a photo</h1>
+                <p class="screen-desc">Choose any image to convert to paint by numbers</p>
+                
+                <label class="upload-zone" id="pbnUploadZone">
+                    <input type="file" id="pbnImageInput" accept="image/*" hidden>
+                    <div class="upload-placeholder" id="pbnUploadPlaceholder">
+                        <span class="upload-icon">🖼️</span>
+                        <span class="upload-text">Tap to choose photo</span>
+                    </div>
+                    <canvas id="pbnOriginalCanvas" class="upload-preview hidden"></canvas>
+                </label>
+            </div>
+            
+            <footer class="screen-footer">
+                <button class="nav-btn primary" id="pbnToSettingsBtn" disabled>Continue →</button>
+            </footer>
+        </section>
+
+        <!-- PAINT BY NUMBERS FLOW: Settings -->
+        <section class="screen" id="pbnSettingsScreen">
+            <header class="screen-header">
+                <button class="back-btn" data-goto="pbnUploadScreen">←</button>
+                <div class="step-indicator">Step 2 of 3</div>
+            </header>
+            
+            <div class="screen-body">
+                <h1 class="screen-title">Adjust settings</h1>
+                <p class="screen-desc">Configure your paint by numbers image</p>
+                
+                <div class="settings-grid">
+                    <div class="setting-card full">
+                        <label class="setting-label">Number of Colors</label>
+                        <div class="stepper">
+                            <button class="stepper-btn" data-target="pbnColorsInput" data-delta="-1">−</button>
+                            <input type="number" id="pbnColorsInput" value="9" min="2" max="15">
+                            <button class="stepper-btn" data-target="pbnColorsInput" data-delta="1">+</button>
+                        </div>
+                    </div>
+                    <div class="setting-card full">
+                        <label class="setting-label">Detail Level</label>
+                        <div class="stepper">
+                            <button class="stepper-btn" data-target="pbnDetailInput" data-delta="-10">−</button>
+                            <input type="number" id="pbnDetailInput" value="50" min="20" max="100">
+                            <button class="stepper-btn" data-target="pbnDetailInput" data-delta="10">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="screen-footer">
+                <button class="nav-btn primary" id="pbnProcessBtn">
+                    <span class="btn-spinner hidden"></span>
+                    <span>Create Paint by Numbers ✨</span>
+                </button>
+            </footer>
+        </section>
+
+        <!-- PAINT BY NUMBERS FLOW: Result -->
+        <section class="screen" id="pbnResultScreen">
+            <header class="screen-header">
+                <button class="back-btn" data-goto="pbnSettingsScreen">←</button>
+                <div class="step-indicator">Done! 🎉</div>
+            </header>
+            
+            <div class="screen-body">
+                <h1 class="screen-title">Your coloring page</h1>
+                
+                <div class="pbn-preview-container">
+                    <div class="pbn-toggle-group">
+                        <button class="pbn-toggle active" id="pbnShowOutline">Outline</button>
+                        <button class="pbn-toggle" id="pbnShowColored">Colored</button>
+                    </div>
+                    <div class="result-preview">
+                        <canvas id="pbnResultCanvas"></canvas>
+                    </div>
+                </div>
+                
+                <div class="pbn-legend" id="pbnLegend"></div>
+            </div>
+            
+            <footer class="screen-footer stacked">
+                <button class="nav-btn primary" id="pbnDownloadBtn">📥 Download PNG</button>
             </footer>
         </section>
 

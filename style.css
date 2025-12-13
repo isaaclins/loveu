@@ -753,11 +753,13 @@ html, body {
     
     .home-buttons {
         flex-direction: row;
-        max-width: 500px;
+        flex-wrap: wrap;
+        max-width: 700px;
     }
     
     .big-btn {
         flex: 1;
+        min-width: 200px;
     }
     
     .settings-grid {
@@ -806,5 +808,98 @@ html, body {
     .tutorial-overlay {
         align-items: center;
     }
+}
+
+/* ===== PAINT BY NUMBERS ===== */
+.big-btn.tertiary {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    border: none;
+    box-shadow: 0 8px 32px rgba(79, 70, 229, 0.3);
+}
+
+.big-btn.tertiary .btn-hint {
+    color: rgba(255,255,255,0.8);
+}
+
+.pbn-preview-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.pbn-toggle-group {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.pbn-toggle {
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pbn-toggle.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+
+.pbn-toggle:hover:not(.active) {
+    background: var(--card-hover);
+}
+
+.pbn-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    padding: 16px;
+    background: var(--card);
+    border-radius: var(--radius);
+    margin-top: 16px;
+}
+
+.pbn-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+}
+
+.pbn-legend-num {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text);
+    min-width: 20px;
+    text-align: center;
+}
+
+.pbn-legend-swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+}
+
+.pbn-legend-name {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-transform: capitalize;
+}
+
+#pbnResultCanvas {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-sm);
 }
 

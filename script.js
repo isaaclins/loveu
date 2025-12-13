@@ -722,3 +722,390 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+// =============================================
+// PAINT BY NUMBERS FEATURE
+// =============================================
+
+const pbnImageInput = document.getElementById('pbnImageInput');
+const pbnOriginalCanvas = document.getElementById('pbnOriginalCanvas');
+const pbnResultCanvas = document.getElementById('pbnResultCanvas');
+const pbnColorsInput = document.getElementById('pbnColorsInput');
+const pbnDetailInput = document.getElementById('pbnDetailInput');
+const pbnProcessBtn = document.getElementById('pbnProcessBtn');
+const pbnDownloadBtn = document.getElementById('pbnDownloadBtn');
+const pbnLegend = document.getElementById('pbnLegend');
+const pbnShowOutline = document.getElementById('pbnShowOutline');
+const pbnShowColored = document.getElementById('pbnShowColored');
+
+let pbnLoadedImage = null;
+let pbnData = null; // { palette, regions, width, height }
+let pbnShowColoredMode = false;
+
+// Navigation for Paint by Numbers
+document.getElementById('startPaintByNumberBtn')?.addEventListener('click', () => showScreen('pbnUploadScreen'));
+document.getElementById('pbnToSettingsBtn')?.addEventListener('click', () => showScreen('pbnSettingsScreen'));
+
+// Handle image upload for PBN
+pbnImageInput?.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) handlePbnImageLoad(file);
+});
+
+const handlePbnImageLoad = (file) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+            pbnLoadedImage = img;
+            drawCanvasImage(pbnOriginalCanvas, img);
+            pbnOriginalCanvas.classList.remove('hidden');
+            document.getElementById('pbnUploadPlaceholder')?.classList.add('hidden');
+            const continueBtn = document.getElementById('pbnToSettingsBtn');
+            if (continueBtn) continueBtn.disabled = false;
+        };
+        img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+};
+
+// Process image to Paint by Numbers
+pbnProcessBtn?.addEventListener('click', () => {
+    if (!pbnLoadedImage) return alert('Please select an image first.');
+    processPaintByNumbers();
+});
+
+const processPaintByNumbers = () => {
+    const numColors = clamp(parseInt(pbnColorsInput.value, 10) || 9, 2, 15);
+    const detail = clamp(parseInt(pbnDetailInput.value, 10) || 50, 20, 100);
+    
+    // Create working canvas with appropriate detail level
+    const maxSize = detail * 8; // 160-800 pixels depending on detail
+    const scale = Math.min(maxSize / pbnLoadedImage.width, maxSize / pbnLoadedImage.height);
+    const workWidth = Math.round(pbnLoadedImage.width * scale);
+    const workHeight = Math.round(pbnLoadedImage.height * scale);
+    
+    const workCanvas = document.createElement('canvas');
+    workCanvas.width = workWidth;
+    workCanvas.height = workHeight;
+    const workCtx = workCanvas.getContext('2d');
+    workCtx.drawImage(pbnLoadedImage, 0, 0, workWidth, workHeight);
+    
+    const imageData = workCtx.getImageData(0, 0, workWidth, workHeight);
+    const pixels = [];
+    
+    for (let i = 0; i < imageData.data.length; i += 4) {
+        pixels.push({ 
+            r: imageData.data[i], 
+            g: imageData.data[i + 1], 
+            b: imageData.data[i + 2] 
+        });
+    }
+    
+    // Quantize colors
+    const { palette } = kMeans(pixels, numColors, 15);
+    
+    // Create region map
+    const regionMap = new Array(workHeight).fill(null).map(() => new Array(workWidth).fill(-1));
+    
+    for (let y = 0; y < workHeight; y++) {
+        for (let x = 0; x < workWidth; x++) {
+            const idx = y * workWidth + x;
+            const pixel = pixels[idx];
+            regionMap[y][x] = nearestPaletteIndex(pixel, palette);
+        }
+    }
+    
+    // Find region boundaries and centroids for number placement
+    const regions = findRegionsWithCentroids(regionMap, workWidth, workHeight, palette);
+    
+    pbnData = {
+        palette,
+        regionMap,
+        regions,
+        width: workWidth,
+        height: workHeight
+    };
+    
+    // Update legend
+    updatePbnLegend(palette);
+    
+    // Draw result
+    pbnShowColoredMode = false;
+    pbnShowOutline?.classList.add('active');
+    pbnShowColored?.classList.remove('active');
+    drawPbnResult();
+    
+    showScreen('pbnResultScreen');
+};
+
+const findRegionsWithCentroids = (regionMap, width, height, palette) => {
+    const visited = new Array(height).fill(null).map(() => new Array(width).fill(false));
+    const regions = [];
+    
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            if (!visited[y][x]) {
+                const colorIndex = regionMap[y][x];
+                const region = floodFillRegion(regionMap, visited, x, y, colorIndex, width, height);
+                if (region.pixels.length > 20) { // Only include regions larger than 20 pixels
+                    regions.push(region);
+                }
+            }
+        }
+    }
+    
+    return regions;
+};
+
+const floodFillRegion = (regionMap, visited, startX, startY, colorIndex, width, height) => {
+    const pixels = [];
+    const stack = [[startX, startY]];
+    let sumX = 0, sumY = 0;
+    
+    while (stack.length > 0) {
+        const [x, y] = stack.pop();
+        
+        if (x < 0 || x >= width || y < 0 || y >= height) continue;
+        if (visited[y][x]) continue;
+        if (regionMap[y][x] !== colorIndex) continue;
+        
+        visited[y][x] = true;
+        pixels.push({ x, y });
+        sumX += x;
+        sumY += y;
+        
+        stack.push([x + 1, y]);
+        stack.push([x - 1, y]);
+        stack.push([x, y + 1]);
+        stack.push([x, y - 1]);
+    }
+    
+    const centroid = pixels.length > 0 
+        ? { x: Math.round(sumX / pixels.length), y: Math.round(sumY / pixels.length) }
+        : { x: startX, y: startY };
+    
+    return { colorIndex, pixels, centroid };
+};
+
+const drawPbnResult = () => {
+    if (!pbnData) return;
+    
+    const { palette, regionMap, regions, width, height } = pbnData;
+    const scale = 4; // Scale up for better quality
+    const canvasWidth = width * scale;
+    const canvasHeight = height * scale;
+    
+    pbnResultCanvas.width = canvasWidth;
+    pbnResultCanvas.height = canvasHeight;
+    const ctx = pbnResultCanvas.getContext('2d');
+    
+    // Fill background
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    
+    if (pbnShowColoredMode) {
+        // Draw colored version
+        for (let y = 0; y < height; y++) {
+            for (let x = 0; x < width; x++) {
+                const colorIndex = regionMap[y][x];
+                const color = palette[colorIndex];
+                ctx.fillStyle = color.hex;
+                ctx.fillRect(x * scale, y * scale, scale, scale);
+            }
+        }
+    }
+    
+    // Draw outlines (edges between different colors)
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 1;
+    
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            const currentColor = regionMap[y][x];
+            
+            // Check right neighbor
+            if (x < width - 1 && regionMap[y][x + 1] !== currentColor) {
+                ctx.beginPath();
+                ctx.moveTo((x + 1) * scale, y * scale);
+                ctx.lineTo((x + 1) * scale, (y + 1) * scale);
+                ctx.stroke();
+            }
+            
+            // Check bottom neighbor
+            if (y < height - 1 && regionMap[y + 1][x] !== currentColor) {
+                ctx.beginPath();
+                ctx.moveTo(x * scale, (y + 1) * scale);
+                ctx.lineTo((x + 1) * scale, (y + 1) * scale);
+                ctx.stroke();
+            }
+        }
+    }
+    
+    // Draw border
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(1, 1, canvasWidth - 2, canvasHeight - 2);
+    
+    // Draw numbers in region centroids (only for outline mode)
+    if (!pbnShowColoredMode) {
+        ctx.fillStyle = '#333333';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        // Adjust font size based on canvas size
+        const baseFontSize = Math.max(10, Math.min(14, scale * 3));
+        ctx.font = `bold ${baseFontSize}px Inter, sans-serif`;
+        
+        regions.forEach(region => {
+            const num = region.colorIndex + 1;
+            const cx = region.centroid.x * scale;
+            const cy = region.centroid.y * scale;
+            
+            // Only draw if region is large enough
+            if (region.pixels.length > 50) {
+                ctx.fillText(num.toString(), cx, cy);
+            }
+        });
+    }
+};
+
+const updatePbnLegend = (palette) => {
+    if (!pbnLegend) return;
+    
+    pbnLegend.innerHTML = '';
+    palette.forEach((color, idx) => {
+        const item = document.createElement('div');
+        item.className = 'pbn-legend-item';
+        item.innerHTML = `
+            <span class="pbn-legend-num">${idx + 1}</span>
+            <span class="pbn-legend-swatch" style="background: ${color.hex}"></span>
+            <span class="pbn-legend-name">${hexToColorName(color.hex)}</span>
+        `;
+        pbnLegend.appendChild(item);
+    });
+};
+
+// Toggle between outline and colored view
+pbnShowOutline?.addEventListener('click', () => {
+    pbnShowColoredMode = false;
+    pbnShowOutline.classList.add('active');
+    pbnShowColored.classList.remove('active');
+    drawPbnResult();
+});
+
+pbnShowColored?.addEventListener('click', () => {
+    pbnShowColoredMode = true;
+    pbnShowColored.classList.add('active');
+    pbnShowOutline.classList.remove('active');
+    drawPbnResult();
+});
+
+// Download Paint by Numbers PNG
+pbnDownloadBtn?.addEventListener('click', () => {
+    if (!pbnData) return;
+    
+    const { palette, regionMap, regions, width, height } = pbnData;
+    const scale = 8; // Higher resolution for download
+    const canvasWidth = width * scale;
+    const canvasHeight = height * scale;
+    const legendHeight = 60 + Math.ceil(palette.length / 5) * 40; // Space for legend
+    
+    const downloadCanvas = document.createElement('canvas');
+    downloadCanvas.width = canvasWidth;
+    downloadCanvas.height = canvasHeight + legendHeight;
+    const ctx = downloadCanvas.getContext('2d');
+    
+    // Fill background
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, downloadCanvas.width, downloadCanvas.height);
+    
+    // Draw outlines
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 1;
+    
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            const currentColor = regionMap[y][x];
+            
+            if (x < width - 1 && regionMap[y][x + 1] !== currentColor) {
+                ctx.beginPath();
+                ctx.moveTo((x + 1) * scale, y * scale);
+                ctx.lineTo((x + 1) * scale, (y + 1) * scale);
+                ctx.stroke();
+            }
+            
+            if (y < height - 1 && regionMap[y + 1][x] !== currentColor) {
+                ctx.beginPath();
+                ctx.moveTo(x * scale, (y + 1) * scale);
+                ctx.lineTo((x + 1) * scale, (y + 1) * scale);
+                ctx.stroke();
+            }
+        }
+    }
+    
+    // Draw border
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(1, 1, canvasWidth - 2, canvasHeight - 2);
+    
+    // Draw numbers
+    ctx.fillStyle = '#333333';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const fontSize = Math.max(12, Math.min(20, scale * 2));
+    ctx.font = `bold ${fontSize}px Inter, Arial, sans-serif`;
+    
+    regions.forEach(region => {
+        const num = region.colorIndex + 1;
+        const cx = region.centroid.x * scale;
+        const cy = region.centroid.y * scale;
+        
+        if (region.pixels.length > 30) {
+            ctx.fillText(num.toString(), cx, cy);
+        }
+    });
+    
+    // Draw legend at bottom
+    const legendStartY = canvasHeight + 20;
+    ctx.font = 'bold 16px Inter, Arial, sans-serif';
+    ctx.fillStyle = '#000000';
+    ctx.textAlign = 'left';
+    ctx.fillText('Color Legend:', 20, legendStartY);
+    
+    const itemsPerRow = 5;
+    const itemWidth = (canvasWidth - 40) / itemsPerRow;
+    
+    palette.forEach((color, idx) => {
+        const row = Math.floor(idx / itemsPerRow);
+        const col = idx % itemsPerRow;
+        const x = 20 + col * itemWidth;
+        const y = legendStartY + 25 + row * 35;
+        
+        // Number
+        ctx.font = 'bold 14px Inter, Arial, sans-serif';
+        ctx.fillStyle = '#000000';
+        ctx.textAlign = 'center';
+        ctx.fillText((idx + 1).toString(), x + 12, y + 10);
+        
+        // Color swatch
+        ctx.fillStyle = color.hex;
+        ctx.fillRect(x + 25, y, 24, 20);
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x + 25, y, 24, 20);
+        
+        // Color name
+        ctx.font = '12px Inter, Arial, sans-serif';
+        ctx.fillStyle = '#333333';
+        ctx.textAlign = 'left';
+        ctx.fillText(hexToColorName(color.hex), x + 55, y + 12);
+    });
+    
+    // Download
+    const url = downloadCanvas.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'paint-by-numbers.png';
+    a.click();
+});
+
