@@ -405,13 +405,30 @@ const buildRuns = (grid) => {
     const runs = [];
     for (let r = 0; r < grid.length; r += 1) {
         const row = grid[r];
-        let start = 0;
-        while (start < row.length) {
-            const color = row[start];
-            let end = start + 1;
-            while (end < row.length && row[end] === color) end += 1;
-            runs.push({ row: r, startCol: start, length: end - start, colorIndex: color });
-            start = end;
+        const isReversed = r % 2 === 1; // Odd rows (B, D, F...) go right-to-left
+        
+        if (isReversed) {
+            // Right-to-left: start from end of row
+            let start = row.length - 1;
+            while (start >= 0) {
+                const color = row[start];
+                let end = start - 1;
+                while (end >= 0 && row[end] === color) end -= 1;
+                const length = start - end;
+                const startCol = end + 1;
+                runs.push({ row: r, startCol, length, colorIndex: color });
+                start = end;
+            }
+        } else {
+            // Left-to-right: normal order
+            let start = 0;
+            while (start < row.length) {
+                const color = row[start];
+                let end = start + 1;
+                while (end < row.length && row[end] === color) end += 1;
+                runs.push({ row: r, startCol: start, length: end - start, colorIndex: color });
+                start = end;
+            }
         }
     }
     return runs;
